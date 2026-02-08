@@ -8,9 +8,68 @@
   <title>Birthday Gift Animation</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    /* Landing screen */
+    #landing-screen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      z-index: 9999;
+      transition: opacity 0.6s ease;
+    }
+    #landing-screen.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+    #start-btn {
+      padding: 18px 50px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(135deg, #ff3366, #ff6699, #ff33cc);
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 0 30px rgba(255, 51, 102, 0.5);
+      animation: pulse-btn 2s infinite;
+      transition: transform 0.2s;
+    }
+    #start-btn:hover {
+      transform: scale(1.08);
+    }
+    @keyframes pulse-btn {
+      0%, 100% { box-shadow: 0 0 20px rgba(255, 51, 102, 0.4); }
+      50% { box-shadow: 0 0 40px rgba(255, 51, 102, 0.8); }
+    }
+    #landing-screen p {
+      color: #ff99cc;
+      font-size: 16px;
+      margin-top: 20px;
+      font-family: cursive;
+      opacity: 0.8;
+    }
+
+    /* Hide main content until started */
+    #wrapper.hidden-wrapper {
+      display: none !important;
+    }
+
+    /* Photo circular fit */
+    .content .right .image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+  </style>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
-  <!-- ❤️ Floating Heart Cursor Script (restored and working) -->
+  <!-- Floating Heart Cursor Script -->
   <script type="text/javascript">
   var colours = ['#ff3366', '#ff6699', '#ff33cc', '#ff99cc', '#ff66b2', '#ff0066']; 
   var minisize = 16; 
@@ -143,9 +202,16 @@
 </head>
 
 <body>
-  <!-- 👇 Your entire original content (untouched) -->
-  <!-- START -->
-  <div id="wrapper">
+  <!-- Landing Screen - shown first -->
+  <div id="landing-screen">
+    <button id="start-btn">
+      Click Me 🎁
+    </button>
+    <p>A little something special awaits...</p>
+  </div>
+
+  <!-- Main content - hidden until button click -->
+  <div id="wrapper" class="hidden-wrapper">
     <div class="flag__birthday">
       <img src="./images/1.png" alt="" width="350" class="flag__left">
       <img src="./images/1.png" alt="" width="350" class="flag__right">
@@ -191,11 +257,11 @@
       <div class="right">
         <div class="box__account">
           <div class="image">
-            <img src="./images/r5.jpg" alt="">
+            <img src="./images/photo.jpg" alt="">
           </div>
           <div class="name">
             <i class="fa-solid fa-heart"></i>
-            <span>Aarna</span>
+            <span>Varada</span>
             <i class="fa-solid fa-heart"></i>
           </div>
           <div class="balloon_one">
@@ -284,10 +350,9 @@
   </div>
 
 
-  <!-- Original script unchanged -->
   <script>
-    let datetxt = "08 February 2012";
-    let datatxtletter = "I wish you all the best, lots of health, and lots of joy. Happy birthday to you. From Vanika 💕";
+    let datetxt = "08 February 2006";
+    let datatxtletter = "Happy Birthday! 🎉 Hope today's filled with good food, good company, and lots of little moments that make you smile. Wishing you a great year ahead! - From Vanika 💕";
     let titleLetter = "To you";
     let charArrDate = datetxt.split('');
     let charArrDateLetter = datatxtletter.split('');
@@ -298,7 +363,8 @@
     let date__of__birth = document.querySelector(".date__of__birth span");
     let text__letter = document.querySelector(".text__letter p");
 
-    setTimeout(function(){
+    // Date animation function
+    function startDateAnimation() {
       timeDatetxt = setInterval(function(){
         if(currentIndex < charArrDate.length){
           date__of__birth.textContent += charArrDate[currentIndex];
@@ -310,11 +376,31 @@
           document.querySelector(".date__of__birth").appendChild(i.cloneNode(true));
           clearInterval(timeDatetxt);
         }
-      },100)
-    },12000);
+      },100);
+    }
 
     var intervalContent;
     var intervalTitle;
+
+    // START BUTTON - reveals everything
+    document.getElementById("start-btn").addEventListener("click", function(){
+      var landing = document.getElementById("landing-screen");
+      var wrapper = document.getElementById("wrapper");
+
+      // Fade out landing screen
+      landing.classList.add("fade-out");
+
+      // After fade, remove landing and show wrapper
+      setTimeout(function(){
+        landing.style.display = "none";
+        wrapper.classList.remove("hidden-wrapper");
+
+        // Start date animation after content animations play
+        setTimeout(startDateAnimation, 12000);
+      }, 600);
+    });
+
+    // LETTER BUTTON - opens the letter overlay
     $("#btn__letter").on("click", function(){
       $(".box__letter").slideDown();
       setTimeout(function(){
@@ -373,10 +459,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
